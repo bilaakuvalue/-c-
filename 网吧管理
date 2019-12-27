@@ -1,0 +1,445 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+using namespace std;
+#define M 10 
+class user
+{
+public:
+	string name,num;
+	double time,money;
+public:
+	user(string na=" ",string n=" ",double t=0.0,double m=0.0)
+	{
+		name=na;
+		num=n;
+		time=t;
+		money=m;
+	}
+	virtual void Input(){};
+    virtual void Output(){};                 
+    string get_name(){return name;};            
+    string get_num(){return num;};          
+    double get_time(){return time;};      
+    double get_money(){return money;};
+};
+class Yesvip :virtual public user
+{
+public:
+	double paytime;
+public:
+	Yesvip(string na=" ",string n=" ",double t=0.0,double m=0.0,double p=0.0):user(na,n,t,m)
+	{
+		paytime=p;
+	};
+	void Input()
+	{
+		cout<<"请输入姓名:"<<endl;
+		cin>>name;
+		cout<<"请输入身份证号:"<<endl;
+		cin>>num;
+		cout<<"请输入上机时间:"<<endl;
+		cin>>time;
+		cout<<"请输入充值金额:"<<endl;
+		cin>>money;
+		paytime=3*time;
+	}
+	void Output()
+	{
+            cout<<"  "<<name<<"   "<<num
+			<<setw(10)<<time<<setw(10)<<money<<setw(10)<<paytime<<endl;
+	}
+};
+class Novip :virtual public user
+{
+public:
+	double paytime;
+public:
+	Novip(string na=" ",string n=" ",double t=0.0,double m=0.0,double p=0.0):user(na,n,t,m)
+	{
+		paytime=p;
+	};
+	void Input()
+	{
+		cout<<"请输入姓名:"<<endl;
+		cin>>name;
+		cout<<"请输入身份证号:"<<endl;
+		cin>>num;
+		cout<<"请输入上机时间:"<<endl;
+		cin>>time;
+		cout<<"请输入充值金额:"<<endl;
+		cin>>money;
+		paytime=5*time;
+	}
+	void Output()
+	{
+            cout<<"  "<<name<<"   "<<num
+			<<setw(10)<<time<<setw(10)<<money<<setw(10)<<paytime<<endl;
+	}
+};
+class No_Manage
+{
+	Novip No[M];
+	int len;
+public:
+	No_Manage(){len=0;}
+	void Add();         
+	void Jiezhang();         
+	void Search();   
+	void Xiugai();    
+	void Chongzhi();
+};
+void No_Manage::Add()
+{
+	if(len>=M)
+	{
+		cout<<"人数满了"<<endl;
+		return;
+	}
+	Novip s;
+	cout<<"输入新人的信息"<<endl;
+	s.Input();
+	for(int i=0;i<len;i++)
+		if ((s.get_num())==No[i].get_num())
+		{
+			cout<<"该身份证的人已存在"<<endl;
+			return;
+		}
+    No[len]=s;
+    len=len+1;
+	cout<<"添加成功!"<<endl;
+}
+
+void No_Manage::Jiezhang()
+{
+	if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	cout<<"请输入要结账的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(No[i].get_num()==num)
+		{
+          double t;
+			t=(No[i].get_money()-No[i].paytime);
+			cout<<"结账成功返还"<<t<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+
+void No_Manage::Search()
+{
+	if(len==0)
+	{
+		cout<<"没有人"<<endl;
+		return;
+	}
+	int x;
+	cout<<"请选择查找方式:1.按姓名查2.按身份证号查"<<endl;
+	cin>>x;
+	switch(x)
+	{
+	case 1:{
+		cout<<"输入姓名"<<endl;
+		string name;
+		cin>>name;
+		cout<<"  "<<"姓名"<<"        "<<"身份证号"<<setw(18)<<"上机时间"<<setw(10)<<"充值金额"<<setw(8)<<"花销"<<endl;
+		for(int i=0;i<len;i++)
+		{
+			if(No[i].get_name()==name)
+			{
+				No[i].Output();
+			}
+		}
+		return;
+		cout<<"查无此人"<<endl;
+		   }break;
+	case 2:{
+		cout<<"输入身份证号"<<endl;
+		string num;
+		cin>>num;
+		cout<<"  "<<"姓名"<<"        "<<"身份证号"<<setw(18)<<"上机时间"<<setw(10)<<"充值金额"<<setw(8)<<"花销"<<endl;
+		for(int i=0;i<len;i++)
+		{
+			if(No[i].get_num()==num)
+			{
+				No[i].Output();
+			}
+		}
+		return;
+		cout<<"查无此人"<<endl;
+		   }break;
+	default:cout<<"无此选项，请重试"<<endl;break;
+	}
+}
+void No_Manage::Xiugai()
+{
+	if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	cout<<"请输入要查找的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(No[i].get_num()==num)
+		{
+			cout<<"请对这位顾客的信息进行修改:"<<endl;
+			No[i].Input();
+			cout<<"修改成功"<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+void No_Manage::Chongzhi()
+{
+    if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	double d;
+	cout<<"请输入要查找的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(No[i].get_num()==num)
+		{
+			cout<<"请选择充值金额:"<<endl;
+          cin>>d;
+			No[i].money+=d;
+			cout<<"充值成功"<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+
+class Yes_Manage
+{
+	Yesvip Yes[M];
+	int len;
+public:
+	Yes_Manage(){len=0;}
+	void Add();         
+	void Jiezhang();         
+	void Search();   
+	void Xiugai();    
+	void Chongzhi();
+};
+void Yes_Manage::Add()
+{
+	if(len>=M)
+	{
+		cout<<"人数满了"<<endl;
+		return;
+	}
+	Yesvip s;
+	cout<<"输入新人的信息"<<endl;
+	s.Input();
+	for(int i=0;i<len;i++)
+		if ((s.get_num())==Yes[i].get_num())
+		{
+			cout<<"该身份证的人已存在"<<endl;
+			return;
+		}
+    Yes[len]=s;
+    len=len+1;
+	cout<<"添加成功!"<<endl;
+}
+void Yes_Manage::Jiezhang()
+{
+	if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	cout<<"请输入要结账的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(Yes[i].get_num()==num)
+		{
+          int t;
+			t=(Yes[i].get_money()-Yes[i].paytime);
+			cout<<"结账成功,返还"<<t<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+
+void Yes_Manage::Search()
+{
+	if(len==0)
+	{
+		cout<<"没有人"<<endl;
+		return;
+	}
+	int x;
+	cout<<"请选择查找方式:1.按姓名查2.按身份证号查"<<endl;
+	cin>>x;
+	switch(x)
+	{
+	case 1:{
+		cout<<"输入姓名"<<endl;
+		string name;
+		cin>>name;
+		cout<<"  "<<"姓名"<<"        "<<"身份证号"<<setw(18)<<"上机时间"<<setw(10)<<"充值金额"<<setw(8)<<"花销"<<endl;
+		for(int i=0;i<len;i++)
+		{
+			if(Yes[i].get_name()==name)
+			{
+				Yes[i].Output();
+			}
+		}
+		return;
+		cout<<"查无此人"<<endl;
+		   }break;
+	case 2:{
+		cout<<"输入身份证号"<<endl;
+		string num;
+		cin>>num;
+		cout<<"  "<<"姓名"<<"        "<<"身份证号"<<setw(18)<<"上机时间"<<setw(10)<<"充值金额"<<setw(8)<<"花销"<<endl;
+		for(int i=0;i<len;i++)
+		{
+			if(Yes[i].get_num()==num)
+			{
+				Yes[i].Output();
+			}
+		}
+		return;
+		cout<<"查无此人"<<endl;
+		   }break;
+	default:cout<<"无此选项，请重试"<<endl;break;
+	}
+}
+void Yes_Manage::Xiugai()
+{
+	if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	cout<<"请输入要查找的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(Yes[i].get_num()==num)
+		{
+			cout<<"请对这位顾客的信息进行修改:"<<endl;
+			Yes[i].Input();
+			cout<<"修改成功"<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+
+void Yes_Manage::Chongzhi()
+{
+    if(len==0)
+	{
+		cout<<"啥都没有"<<endl;
+		return;
+	}
+	string num;
+	double d;
+	cout<<"请输入要查找的身份证号:"<<endl;
+	cin>>num;
+    for(int i=0;i<len;i++)
+	{
+		if(Yes[i].get_num()==num)
+		{
+			cout<<"请选择充值金额:"<<endl;
+          cin>>d;
+			Yes[i].money+=d;
+			cout<<"充值成功"<<endl;return;
+		}
+	}
+		 cout<<"查无此人"<<endl;
+}
+void YesMenu();
+void NoMenu();
+int main()
+{
+    int choice;
+
+	do{
+		cout<<"           网吧管理系统 \n"<<endl;
+		cout<<"\n"<<endl;
+		cout<<" \t1=>充值vip \t2=>非vip \t0=>退出系统     "<<endl;
+		cout<<"\n"<<endl;
+		cout<<"\n请输入您的选择:";
+		cin>>choice;
+		switch(choice)
+		{
+		    case 1:YesMenu();break;
+		    case 2:NoMenu();break;
+			case 0:cout<<"\n您已安全退出系统."<<endl;break;
+			default:cout<<"\n没有此选项.请重选."<<endl;break;
+		}
+	}while(choice!=0);
+
+	cout<<"\n------------------------------欢迎您下次再使用!---------------------------------"<<endl;
+	return 0;
+
+}
+
+void YesMenu()
+{
+	Yes_Manage t;
+	int choice;
+	while(choice!=0)
+	{
+		cout<<"\n================================================================================\n"<<endl;
+		cout<< " \n              充值vip"<<endl;
+		cout<<"\n"<<endl;
+		cout<<"  1.添加  2.结账  3.查找   4.修改  5.充值  0.退出 "<<endl;
+		cout<<"\n"<<endl;
+		cout<<"\n输入您操作的选项：";
+		cin>>choice;
+		switch(choice)
+		{
+			case 1:t.Add();break;
+			case 2:t.Jiezhang();break;
+			case 3:t.Search();break;
+			case 4:t.Xiugai();break;
+			case 5:t.Chongzhi();break;
+			case 0:cout<<"退出成功!"<<endl;break;
+			default:cout<<"无此选项!请重试!"<<endl;break;
+		}
+	}
+}
+void NoMenu()
+{
+	No_Manage t;
+	int choice;
+	while(choice!=0)
+	{
+		cout<<"\n================================================================================\n"<<endl;
+		cout<< " \n              不充值vip"<<endl;
+		cout<<"\n"<<endl;
+		cout<<"  1.添加  2.结账  3.查找   4.修改  5.充值  0.退出 "<<endl;
+		cout<<"\n"<<endl;
+		cout<<"\n输入您操作的选项：";
+		cin>>choice;
+		switch(choice)
+		{
+			case 1:t.Add();break;
+			case 2:t.Jiezhang();break;
+			case 3:t.Search();break;
+			case 4:t.Xiugai();break;
+			case 5:t.Chongzhi();break;
+			case 0:cout<<"退出成功!"<<endl;break;
+			default:cout<<"无此选项!请重试!"<<endl;break;
+		}
+	}
+}
